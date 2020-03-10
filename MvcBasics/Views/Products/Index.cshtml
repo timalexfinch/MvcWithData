@@ -1,0 +1,98 @@
+﻿@*@model IEnumerable<MvcBasics.Models.Product>*@
+@model PaginatedList<MvcBasics.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h1>AdventureWorks Products</h1>
+<h2>Core 3.1</h2>
+<p>This page shows Paging, Sorting and Filtering of data from the AdventureWorksLT database</p>
+<p>
+    <a asp-action="Create">Create New Product</a>
+</p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default btn-dark" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySort"]"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]">Category</a>
+
+                @*<a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySort"]">
+                        @Html.DisplayNameFor(model => model.ProductCategory)
+                    </a>*@
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ModelSort"]"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]">Model</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSort"]"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+
+                @*<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSort"]">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </a>*@
+            </th>
+            <th>
+                Colour
+                @*@Html.DisplayNameFor(model => model.Color)*@
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductCategory.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductModel.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Color)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default btn-dark @prevDisabled">
+   &lt; Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"   
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default btn-dark @nextDisabled">
+    Next &gt;
+</a>
